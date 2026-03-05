@@ -13,51 +13,8 @@
   "openapi": "openapi.json",
   "navigation": [
     {
-      "group": "Overview",
-      "pages": ["index"]
-    },
-    {
       "group": "Getting Started",
-      "pages": ["guides/mcp"]
-    },
-    {
-      "group": "Schools & Districts",
-      "pages": [
-        "GET /v1/schools/search/coordinates",
-        "GET /v1/schools/search/address",
-        "GET /v1/schools/districts/coordinates",
-        "GET /v1/schools/districts/address"
-      ]
-    },
-    {
-      "group": "Neighborhood Vibe",
-      "pages": [
-        "GET /v1/vibe/privacy",
-        "GET /v1/vibe/walkability",
-        "GET /v1/vibe/visual-appeal",
-        "GET /v1/vibe/dog-friendliness",
-        "GET /v1/vibe/urban-rural"
-      ]
-    },
-    {
-      "group": "Environment",
-      "pages": [
-        "GET /v1/environment/noise-levels",
-        "GET /v1/environment/industrial-proximity",
-        "GET /v1/environment/air-quality"
-      ]
-    },
-    {
-      "group": "Demographics",
-      "pages": [
-        "GET /v1/demographics/insurance-coverage",
-        "GET /v1/demographics/ideological-lean",
-        "GET /v1/demographics/population-profile"
-      ]
-    },
-    {
-      "group": "Risk & Insurability",
-      "pages": ["GET /v1/risk/flood", "GET /v1/risk/fire"]
+      "pages": ["index", "guides/mcp"]
     }
   ]
 }
