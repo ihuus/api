@@ -1,5 +1,6 @@
 {
   "name": "iHuus Neighborhood Intelligence API",
+  "favicon": "/favicon.svg",
   "logo": {
     "dark": "/logo/dark.svg",
     "light": "/logo/light.svg"
