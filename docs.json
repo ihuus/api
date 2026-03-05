@@ -1,0 +1,30 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "iHuus Neighborhood Intelligence API",
+  "theme": "mint",
+  "favicon": "/logos/favicon.svg",
+  "logo": {
+    "dark": "/logos/dark.svg",
+    "light": "/logos/light.svg"
+  },
+  "colors": {
+    "primary": "#02d97e",
+    "light": "#02d97e",
+    "dark": "#02d97e"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "guides/mcp"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "openapi": "openapi.json"
+      }
+    ]
+  }
+}
