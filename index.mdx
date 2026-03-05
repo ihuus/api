@@ -1,0 +1,64 @@
+---
+title: "Introduction to iHuus"
+description: "High-performance Neighborhood Intelligence for the AI era."
+---
+
+Welcome to the iHuus API documentation.
+
+Building a chat interface is easy, but grounding it in physical reality is hard. Neighborhood data is scattered across petabytes of satellite imagery, noise rasters, and disjointed civic records. Historically, ingesting and normalizing this data required dedicated teams of GIS engineers, creating massive technical debt for real estate applications.
+
+Furthermore, feeding raw, unstructured civic data into Large Language Models (LLMs) inevitably leads to hallucinations and severe trust issues—especially when navigating strict Fair Housing Act (FHA) laws.
+
+**iHuus bridges the gap between raw physical-world data and agent-ready intelligence.**
+
+---
+
+## Agent-Ready Ground Truth
+
+We process, normalize, and synthesize complex geospatial data into a proprietary architecture built specifically for the AI era. Instead of parsing zoning laws and police blotters, your engineering team can focus on building user experiences.
+
+Our platform exposes this data through two distinct, high-performance delivery mechanisms:
+
+### 1. The REST API (Neighborhood Intelligence Index)
+
+We built a highly performant spatial index that allows applications to instantly narrow down their problem scope. Instead of scraping rumors, your systems can query hard facts. Whether you need to know about local school ratings or noise decibels from a nearby flight path, our API delivers credible, FHA-compliant, hyperlocal data in milliseconds.
+
+- **Explore the API Reference:** Dive into our endpoints for [Schools](/api-reference/v1/schools/search-by-coordinates), [Vibe](/api-reference/v1/vibe), [Environment](/api-reference/v1/environment), and [Risk](/api-reference/v1/risk).
+
+### 2. MCP Servers (Neighborhood Intelligence Context)
+
+Data is only useful if an AI can actually understand it. We format our Neighborhood Intelligence to be immediately ready for agentic reasoning. By structuring the context specifically for Tree-of-Thought processes, we empower agents to draw logical, trustworthy conclusions about local risks and amenities without hallucinating.
+
+- **Integrate with Agents:** Learn how to connect iHuus directly to Claude Desktop or your custom agents using the [Model Context Protocol (MCP)](/guides/mcp).
+
+---
+
+<Note>
+  **See the data in action** Want to see what block-level, hyper-local
+  resolution actually looks like before you write any code? You can visually
+  explore our Neighborhood Intelligence Index on our live interactive map at
+  [https://map.ihuus.com/](https://map.ihuus.com/).
+</Note>
+
+---
+
+## Why Build with iHuus?
+
+- **Accelerated AI Development:** With iHuus, building a trustworthy real estate agent takes days, not months. We provide the structured, plug-and-play data so you can skip the GIS pipeline.
+- **Eliminate Hallucinations:** Our data payloads include explicit, human-readable semantic descriptions alongside raw scores, ensuring your LLMs pass accurate context to the end user.
+- **FHA Compliance by Design:** Navigate real estate data safely. Our indices are pre-processed to deliver actionable insights without crossing into protected or biased demographic territories that trigger FHA violations.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="MCP Quickstart" icon="robot" href="/guides/mcp">
+    Connect iHuus to your AI agents via the Model Context Protocol.
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/v1/schools/search-by-coordinates"
+  >
+    Explore our REST endpoints and JSON schemas.
+  </Card>
+</CardGroup>

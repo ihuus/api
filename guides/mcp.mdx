@@ -1,0 +1,85 @@
+---
+title: "MCP Servers Integration"
+description: "How to connect iHuus Neighborhood Intelligence directly to your AI agents using the Model Context Protocol (MCP)."
+---
+
+The iHuus API natively supports the **Model Context Protocol (MCP)**. This allows you to plug our high-fidelity geospatial data directly into AI assistants, enabling them to pull real-time, verified neighborhood data during conversations.
+
+## Connection Details
+
+Our MCP servers use **Streaming HTTP (SSE - Server-Sent Events)** for transport. To connect your agent, you will need your iHuus API Key (passed as a Bearer token) and the URLs for the specific intelligence domains you want to enable.
+
+### Available MCP Servers
+
+We split our MCP tools into topical servers so you can grant your AI access only to the data it needs:
+
+- **Schools:** `https://api.ihuus.com/mcp/schools/`
+  - _Capabilities:_ School ratings, academic data, and school district boundaries.
+- **Neighborhood Vibe:** `https://api.ihuus.com/mcp/vibe/`
+  - _Capabilities:_ Visual appeal, privacy scores, dog friendliness, and urban/rural character.
+- **Environment:** `https://api.ihuus.com/mcp/environment/`
+  - _Capabilities:_ Acoustic comfort and noise data breakdowns.
+
+_Note: Replace `api.ihuus.com` with `api.t.ihuus.com` if you are testing against our staging environment._
+
+---
+
+## Client Setup & Model Selection
+
+You can consume these endpoints using any modern MCP-compatible client, such as **Open WebUI**, **Gemini Studio**, or **GitHub Copilot**.
+
+> **💡 Pro-Tip: Model Selection**
+> When building agents with iHuus data, we highly recommend using fast, "Lite" models (like **Gemini 3.1 Flash Lite** or Claude 3.5 Haiku). Because our tools return highly structured, semantic descriptions, smaller models execute the tool calls rapidly and pass the data to the user efficiently. "Pro" or "Reasoning" models often waste time overthinking standard data lookups.
+
+---
+
+## The System Prompt
+
+To get the best results from your AI agent, you need to constrain its behavior. LLMs are eager to please and will often hallucinate dummy coordinates if a user asks a vague question like _"How are the schools in Texas?"_
+
+Use the following System Prompt to force the AI to rely strictly on iHuus data and ask the user for precise locations:
+
+```text
+You are a helpful, knowledgeable, and conversational AI assistant specializing in neighborhood analysis and educational landscapes.
+
+## Your Capabilities and Boundaries:
+
+**General Knowledge**
+- You may use your internal knowledge to discuss general geographic topics, state policies, or historical context.
+- If you use internal knowledge to discuss neighborhood vibes, you MUST explicitly state that this is general knowledge and should be verified.
+
+**Specific Data and Your Tools**
+- Your tools provide access to **VERIFIED** knowledge from trustworthy data sources (e.g., government agencies).
+- You MUST check your available tools whenever a user asks for localized information (neighborhood features, vibe, exact distances, school data, or noise levels).
+- If a tool is available to answer a user query, you MUST use it first. You can augment tool output with your general knowledge, but you must clearly distinguish between verified tool data and unverified model knowledge.
+
+## Rules for Tool Usage
+1. **Rely on Metadata:** Strictly read the tool descriptions and schemas provided by the MCP server. Do not assume you know what inputs are required.
+2. **Never Guess or Hallucinate:** If a user's request is too broad (e.g., "Mountain View, CA"), do not hallucinate a "dummy" coordinate or address to force the tool to run.
+3. **Ask Follow-up Questions:** iHuus tools require precise addresses or coordinates to function accurately. If the user provides a vague location, politely pause and ask them for a specific street address to pull the verified data.
+
+## Tone
+Be empathetic, clear, and straightforward. Mirror the user's energy and maintain a conversational flow. Refer to your tools as "my verified data sources".
+```
+
+---
+
+## Testing Your Agent
+
+Once your MCP servers are connected and your system prompt is applied, try running this simulated conversation to verify the AI is calling the tools correctly:
+
+**1. The Vague Opener** (The AI should ask for a specific address)
+
+> _"Hey, I am moving to Mountain View, CA. How is it there?"_
+
+**2. The Environment Query** (The AI should trigger the `/mcp/environment/` tool)
+
+> _"I will be living near 250 Mariposa Ave. Is it noisy?"_
+
+**3. The Schools Query** (The AI should trigger the `/mcp/schools/` tool)
+
+> _"My kids are 10 and 15. How good are the schools around that address?"_
+
+**4. The Vibe Query** (The AI should trigger the `/mcp/vibe/` tool)
+
+> _"Will I be able to hear my neighbors, and is there a good place to walk my dog nearby?"_
