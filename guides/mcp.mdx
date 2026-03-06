@@ -1,85 +1,164 @@
 ---
 title: "MCP Servers Integration"
-description: "How to connect iHuus Neighborhood Intelligence directly to your AI agents using the Model Context Protocol (MCP)."
+description:
+  "Connect iHuus Neighborhood Intelligence directly to your AI agents using the Model
+  Context Protocol (MCP)."
 ---
 
-The iHuus API natively supports the **Model Context Protocol (MCP)**. This allows you to plug our high-fidelity geospatial data directly into AI assistants, enabling them to pull real-time, verified neighborhood data during conversations.
+The iHuus API natively supports the **Model Context Protocol (MCP)**, letting you plug
+high-fidelity geospatial data directly into AI assistants. Your agents can pull verified
+neighborhood data during conversations without any custom parsing or data pipelines.
+
+## Why MCP Over Grounding?
+
+Most teams default to RAG/grounding pipelines when connecting external data to LLMs. For
+neighborhood intelligence, MCP is a better fit for two key reasons:
+
+<CardGroup cols={2}>
+  <Card title="Trustworthy by Design" icon="shield-check">
+    Grounding relies on embedding similarity to retrieve chunks, and a wrong chunk can
+    surface a mismatched tax record, an outdated zoning law, or a neighboring parcel's
+    data. MCP eliminates that risk: your agent calls a typed endpoint with explicit
+    coordinates, and the response is a single, authoritative record with source
+    attribution. No retrieval ambiguity.
+  </Card>
+  <Card title="Lower Cost" icon="coins">
+    Grounding pipelines inject large context windows of retrieved documents into every LLM
+    call, and most providers charge a premium for grounding tokens. iHuus MCP tool calls
+    return compact, structured payloads (a score and a one-line description), adding
+    minimal input tokens. No extra LLM API surcharges, no bloated context windows.
+  </Card>
+</CardGroup>
+
+---
 
 ## Connection Details
 
-Our MCP servers use **Streaming HTTP (SSE - Server-Sent Events)** for transport. To connect your agent, you will need your iHuus API Key (passed as a Bearer token) and the URLs for the specific intelligence domains you want to enable.
+Our MCP servers use **Streaming HTTP (SSE)** for transport. You need two things to
+connect:
+
+1. Your **iHuus API Key** (passed as a Bearer token).
+2. The **server URLs** for the intelligence domains you want to enable.
 
 ### Available MCP Servers
 
-We split our MCP tools into topical servers so you can grant your AI access only to the data it needs:
+We split tools into topical servers so you can grant your AI access only to the data it
+needs.
 
-- **Schools:** `https://api.ihuus.com/mcp/schools/`
-  - _Capabilities:_ School ratings, academic data, and school district boundaries.
-- **Neighborhood Vibe:** `https://api.ihuus.com/mcp/vibe/`
-  - _Capabilities:_ Visual appeal, privacy scores, dog friendliness, and urban/rural character.
-- **Environment:** `https://api.ihuus.com/mcp/environment/`
-  - _Capabilities:_ Acoustic comfort and noise data breakdowns.
+| Server           | URL                                       | Capabilities                                                                 |
+| ---------------- | ----------------------------------------- | ---------------------------------------------------------------------------- |
+| **Schools**      | `https://api.ihuus.com/mcp/schools/`      | K-12 school search, ratings, district boundaries                             |
+| **Vibe**         | `https://api.ihuus.com/mcp/vibe/`         | Privacy, walkability, visual appeal, dog friendliness, urban-rural character |
+| **Environment**  | `https://api.ihuus.com/mcp/environment/`  | Noise levels, air quality, industrial proximity                              |
+| **Demographics** | `https://api.ihuus.com/mcp/demographics/` | Insurance coverage, ideological lean, population age profile                 |
+| **Risk**         | `https://api.ihuus.com/mcp/risk/`         | Flood risk (FEMA), fire risk (CALFIRE)                                       |
+| **Tools**        | `https://api.ihuus.com/mcp/tools/`        | Address geocoding and other utility functions                                |
 
-_Note: Replace `api.ihuus.com` with `api.t.ihuus.com` if you are testing against our staging environment._
+### The Tools Server
+
+Most intelligence endpoints require `lat`/`lon` coordinates, but users typically provide
+street addresses or city names. The **Tools** server includes a geocoding endpoint that
+converts free-text addresses into coordinates, enabling your agent to work with our APIs
+out of the box.
+
+By connecting the Tools server alongside any intelligence server, your agent can handle
+the full workflow autonomously: receive an address from the user, geocode it, then query
+the relevant intelligence dimensions, all without the user needing to provide coordinates.
 
 ---
 
 ## Client Setup & Model Selection
 
-You can consume these endpoints using any modern MCP-compatible client, such as **Open WebUI**, **Gemini Studio**, or **GitHub Copilot**.
+These endpoints work with any modern MCP-compatible client: **Open WebUI**, **Gemini
+Studio**, **GitHub Copilot**, **Claude Desktop**, or your own custom agent.
 
-> **💡 Pro-Tip: Model Selection**
-> When building agents with iHuus data, we highly recommend using fast, "Lite" models (like **Gemini 3.1 Flash Lite** or Claude 3.5 Haiku). Because our tools return highly structured, semantic descriptions, smaller models execute the tool calls rapidly and pass the data to the user efficiently. "Pro" or "Reasoning" models often waste time overthinking standard data lookups.
+<Note>
+  **Model selection tip:** Our tools return highly structured, semantic descriptions, so
+  fast "Lite" models (like **Gemini 3.1 Flash Lite** or **Claude Sonnet 4.6**) execute
+  tool calls rapidly and pass data to users efficiently. Larger "Pro" or "Deep Thinking"
+  models often overthink standard data lookups.
+</Note>
 
 ---
 
-## The System Prompt
+## System Prompt
 
-To get the best results from your AI agent, you need to constrain its behavior. LLMs are eager to please and will often hallucinate dummy coordinates if a user asks a vague question like _"How are the schools in Texas?"_
-
-Use the following System Prompt to force the AI to rely strictly on iHuus data and ask the user for precise locations:
+To get reliable results, constrain your agent's behavior. LLMs will often hallucinate
+dummy coordinates if a user asks a vague question like "How are the schools in Texas?" The
+system prompt below forces the AI to rely strictly on iHuus data and ask for precise
+locations when needed.
 
 ```text
-You are a helpful, knowledgeable, and conversational AI assistant specializing in neighborhood analysis and educational landscapes.
+You are a helpful, knowledgeable, and conversational AI assistant specializing in
+neighborhood analysis and educational landscapes.
 
-## Your Capabilities and Boundaries:
+## Capabilities and Boundaries
 
 **General Knowledge**
-- You may use your internal knowledge to discuss general geographic topics, state policies, or historical context.
-- If you use internal knowledge to discuss neighborhood vibes, you MUST explicitly state that this is general knowledge and should be verified.
+- You may use internal knowledge to discuss general geographic topics, state policies,
+  or historical context.
+- If you use internal knowledge to discuss neighborhood characteristics, you MUST
+  explicitly state that this is general knowledge and should be verified.
 
-**Specific Data and Your Tools**
-- Your tools provide access to **VERIFIED** knowledge from trustworthy data sources (e.g., government agencies).
-- You MUST check your available tools whenever a user asks for localized information (neighborhood features, vibe, exact distances, school data, or noise levels).
-- If a tool is available to answer a user query, you MUST use it first. You can augment tool output with your general knowledge, but you must clearly distinguish between verified tool data and unverified model knowledge.
+**Verified Data (Your Tools)**
+- Your tools provide access to VERIFIED knowledge from trustworthy government and
+  authoritative data sources. Tool output includes source attribution when available;
+  highlight this to the user.
+- Tools typically require coordinates. Use the geocoding tool to convert addresses,
+  city names, or neighborhoods into latitude and longitude. Precise addresses produce
+  higher-quality, block-level results.
+- If tools are available to answer a query, you MUST use them first. You CAN augment
+  tool output with general knowledge, but clearly distinguish verified tool data from
+  your own knowledge.
 
 ## Rules for Tool Usage
-1. **Rely on Metadata:** Strictly read the tool descriptions and schemas provided by the MCP server. Do not assume you know what inputs are required.
-2. **Never Guess or Hallucinate:** If a user's request is too broad (e.g., "Mountain View, CA"), do not hallucinate a "dummy" coordinate or address to force the tool to run.
-3. **Ask Follow-up Questions:** iHuus tools require precise addresses or coordinates to function accurately. If the user provides a vague location, politely pause and ask them for a specific street address to pull the verified data.
+
+1. **Rely on Metadata:** Read each tool's description, schema, and parameter annotations
+   to understand exactly what inputs are needed. Do not assume.
+2. **Never Guess or Hallucinate:** If the user's request is too broad or lacks required
+   parameters, do not fabricate inputs to force a tool call.
+3. **Ask Follow-up Questions:** If the tool requires specific inputs the user hasn't
+   provided, politely ask a clarifying question before proceeding.
+4. **Geocode First:** When a user provides an address or place name, convert it to
+   coordinates using the geocoding tool before calling intelligence endpoints.
 
 ## Tone
-Be empathetic, clear, and straightforward. Mirror the user's energy and maintain a conversational flow. Refer to your tools as "my verified data sources".
+
+Be empathetic, clear, and straightforward. Mirror the user's energy. Stay concise
+unless detail is needed. Refer to tools as "my data" or "verified data sources."
+
+## Data Sources and Citations
+
+Tools may include a specific data source reference and vintage year. These are
+HIGHLY AUTHORITATIVE. When providing facts from your own knowledge (not tools),
+make it clear the information should be independently verified.
 ```
 
 ---
 
 ## Testing Your Agent
 
-Once your MCP servers are connected and your system prompt is applied, try running this simulated conversation to verify the AI is calling the tools correctly:
+Once your MCP servers are connected and your system prompt is applied, run through this
+conversation to verify the agent calls tools correctly:
 
-**1. The Vague Opener** (The AI should ask for a specific address)
+**1. Vague opener** (agent should ask for a specific address)
 
-> _"Hey, I am moving to Mountain View, CA. How is it there?"_
+> _"Hey, I'm moving to Mountain View, CA. How is it there?"_
 
-**2. The Environment Query** (The AI should trigger the `/mcp/environment/` tool)
+**2. Environment query** (triggers Environment server, geocodes the address first via
+Tools)
 
-> _"I will be living near 250 Mariposa Ave. Is it noisy?"_
+> _"I'll be living near 250 Mariposa Ave. Is it noisy?"_
 
-**3. The Schools Query** (The AI should trigger the `/mcp/schools/` tool)
+**3. Schools query** (triggers Schools server)
 
 > _"My kids are 10 and 15. How good are the schools around that address?"_
 
-**4. The Vibe Query** (The AI should trigger the `/mcp/vibe/` tool)
+**4. Vibe query** (triggers Vibe server)
 
-> _"Will I be able to hear my neighbors, and is there a good place to walk my dog nearby?"_
+> _"Will I be able to hear my neighbors, and is there a good place to walk my dog
+> nearby?"_
+
+**5. Risk query** (triggers Risk server)
+
+> _"Are there any flood or fire risks I should know about?"_

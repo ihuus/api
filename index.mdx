@@ -1,54 +1,242 @@
 ---
-title: "Introduction to iHuus"
-description: "High-performance Neighborhood Intelligence for the AI era."
+title: "iHuus Neighborhood Intelligence"
+description: "High-performance data context layer for the AI era."
 ---
 
-Welcome to the iHuus API documentation.
+Building a chat interface is easy, but grounding it in physical reality is hard.
+Neighborhood data is scattered across petabytes of satellite imagery, noise rasters, and
+disjointed civic records. Feeding raw, unstructured civic data into LLMs inevitably leads
+to hallucinations and trust issues, especially when navigating strict Fair Housing Act
+(FHA) laws.
 
-Building a chat interface is easy, but grounding it in physical reality is hard. Neighborhood data is scattered across petabytes of satellite imagery, noise rasters, and disjointed civic records. Historically, ingesting and normalizing this data required dedicated teams of GIS engineers, creating massive technical debt for real estate applications.
-
-Furthermore, feeding raw, unstructured civic data into Large Language Models (LLMs) inevitably leads to hallucinations and severe trust issues—especially when navigating strict Fair Housing Act (FHA) laws.
-
-**iHuus bridges the gap between raw physical-world data and agent-ready intelligence.**
-
----
-
-## Agent-Ready Ground Truth
-
-We process, normalize, and synthesize complex geospatial data into a proprietary architecture built specifically for the AI era. Instead of parsing zoning laws and police blotters, your engineering team can focus on building user experiences.
-
-Our platform exposes this data through two distinct, high-performance delivery mechanisms:
-
-### 1. The REST API (Neighborhood Intelligence Index)
-
-We built a highly performant spatial index that allows applications to instantly narrow down their problem scope. Instead of scraping rumors, your systems can query hard facts. Whether you need to know about local school ratings or noise decibels from a nearby flight path, our API delivers credible, FHA-compliant, hyperlocal data in milliseconds.
-
-- **Explore the API Reference:** Dive into our endpoints for [Schools](/api-reference/v1/schools/search-by-coordinates), [Vibe](/api-reference/v1/vibe), [Environment](/api-reference/v1/environment), and [Risk](/api-reference/v1/risk).
-
-### 2. MCP Servers (Neighborhood Intelligence Context)
-
-Data is only useful if an AI can actually understand it. We format our Neighborhood Intelligence to be immediately ready for agentic reasoning. By structuring the context specifically for Tree-of-Thought processes, we empower agents to draw logical, trustworthy conclusions about local risks and amenities without hallucinating.
-
-- **Integrate with Agents:** Learn how to connect iHuus directly to Claude Desktop or your custom agents using the [Model Context Protocol (MCP)](/guides/mcp).
-
----
+**iHuus bridges the gap between raw physical-world data and agent-ready intelligence.** We
+process, normalize, and synthesize complex geospatial data into a proprietary architecture
+built specifically for the AI era, so your engineering team can focus on building user
+experiences instead of GIS pipelines.
 
 <Note>
-  **See the data in action** Want to see what block-level, hyper-local
-  resolution actually looks like before you write any code? You can visually
-  explore our Neighborhood Intelligence Index on our live interactive map at
-  [https://map.ihuus.com/](https://map.ihuus.com/).
+  **See it live:** Explore our Neighborhood Intelligence Index on the interactive map at
+  [map.ihuus.com](https://map.ihuus.com/) before writing a single line of code.
 </Note>
+
+---
+
+## Two Ways to Integrate
+
+<CardGroup cols={2}>
+  <Card title="REST API" icon="bolt" href="/api-reference/v1/schools/search/coordinates">
+    Query our high-performance spatial index directly. Get credible, FHA-compliant,
+    hyperlocal data in milliseconds: school ratings, noise levels, flood risk, and more.
+  </Card>
+  <Card title="MCP Servers" icon="robot" href="/guides/mcp">
+    Plug Neighborhood Intelligence directly into AI agents via the Model Context Protocol.
+    Structured for agentic reasoning, not hallucinations.
+  </Card>
+</CardGroup>
+
+---
+
+## Intelligence Dimensions
+
+Every score is returned on a **0–255 scale** with a human-readable semantic description,
+ready for both programmatic use and LLM consumption.
+
+### Schools & Ratings
+
+Search for K-12 schools and districts by geographic coordinates. Results include distance,
+level, ratings, and district metadata sourced from federal NCES datasets. Use the
+[Geocode endpoint](/api-reference/v1/tools/geocode_single) to convert addresses to
+coordinates first.
+
+<CardGroup cols={2}>
+  <Card
+    title="Schools by Coordinates"
+    icon="school"
+    href="/api-reference/v1/schools/search/coordinates"
+  >
+    Find the closest schools to any lat/lon, with ratings, distance, and district info.
+  </Card>
+  <Card
+    title="Districts by Coordinates"
+    icon="map"
+    href="/api-reference/v1/schools/districts/coordinates"
+  >
+    Look up all overlapping school districts (Unified, Elementary, Secondary) at a
+    location.
+  </Card>
+</CardGroup>
+
+<Tip>
+  All coordinate-based endpoints work seamlessly with AI agents. Our [Geocode
+  tool](/api-reference/v1/tools/geocode_single) lets LLMs convert addresses to coordinates
+  automatically, so no extra integration work is needed.
+</Tip>
+
+### Vibe
+
+Captures the qualitative feel of a neighborhood: how private, walkable, visually
+appealing, dog-friendly, or urban/rural it is.
+
+<CardGroup cols={3}>
+  <Card title="Privacy" icon="eye-slash" href="/api-reference/v1/vibe/privacy">
+    Seclusion based on density, lot sizes, tree cover, and visibility.
+  </Card>
+  <Card
+    title="Walkability"
+    icon="person-walking"
+    href="/api-reference/v1/vibe/walkability"
+  >
+    Sidewalks, intersection density, and proximity to amenities.
+  </Card>
+  <Card
+    title="Visual Appeal"
+    icon="paintbrush"
+    href="/api-reference/v1/vibe/visual-appeal"
+  >
+    Architectural character, landscaping, and streetscape quality.
+  </Card>
+  <Card
+    title="Dog Friendliness"
+    icon="dog"
+    href="/api-reference/v1/vibe/dog-friendliness"
+  >
+    Parks, trails, off-leash areas, and pet-friendly businesses.
+  </Card>
+  <Card title="Urban-Rural" icon="city" href="/api-reference/v1/vibe/urban-rural">
+    Dense urban core to open countryside, classified from overhead imagery.
+  </Card>
+</CardGroup>
+
+### Environment
+
+Quantifies the physical environment: acoustic comfort, air quality, and proximity to
+industrial or hazardous sites.
+
+<CardGroup cols={3}>
+  <Card
+    title="Noise Levels"
+    icon="volume-high"
+    href="/api-reference/v1/environment/noise-levels"
+  >
+    Federal noise modelling for road, railroad, and aviation sources.
+  </Card>
+  <Card title="Air Quality" icon="wind" href="/api-reference/v1/environment/air-quality">
+    AQI consistency derived from OpenAQ monitoring stations.
+  </Card>
+  <Card
+    title="Industrial Proximity"
+    icon="industry"
+    href="/api-reference/v1/environment/industrial-proximity"
+  >
+    EPA hazard data, Superfund sites, and industrial POI density.
+  </Card>
+</CardGroup>
+
+### Demographics
+
+Population-level indicators derived from US Census Bureau data and voting records.
+
+<CardGroup cols={3}>
+  <Card
+    title="Insurance Coverage"
+    icon="shield-heart"
+    href="/api-reference/v1/demographics/insurance-coverage"
+  >
+    Share of residents with health insurance coverage.
+  </Card>
+  <Card
+    title="Ideological Lean"
+    icon="scale-balanced"
+    href="/api-reference/v1/demographics/ideological-lean"
+  >
+    Conservative-to-liberal spectrum from Census and voting data.
+  </Card>
+  <Card
+    title="Population Profile"
+    icon="users"
+    href="/api-reference/v1/demographics/population-profile"
+  >
+    Age distribution from young-adult-skewing to senior-skewing.
+  </Card>
+</CardGroup>
+
+### Risk
+
+Natural hazard exposure derived from FEMA and CALFIRE authoritative datasets. Lower scores
+indicate higher risk.
+
+<CardGroup cols={2}>
+  <Card title="Flood Risk" icon="house-flood-water" href="/api-reference/v1/risk/flood">
+    FEMA flood zone designations from coastal high-hazard to minimal risk.
+  </Card>
+  <Card title="Fire Risk" icon="fire" href="/api-reference/v1/risk/fire">
+    CALFIRE severity zones (California). Severe to no-risk classification.
+  </Card>
+</CardGroup>
+
+### Tools
+
+Utility endpoints to support agentic workflows and data processing.
+
+<CardGroup cols={2}>
+  <Card
+    title="Geocode Address"
+    icon="location-dot"
+    href="/api-reference/v1/tools/geocode_single"
+  >
+    Convert a free-text address into lat/lon coordinates. Built for single-shot agentic
+    use.
+  </Card>
+</CardGroup>
 
 ---
 
 ## Why Build with iHuus?
 
-- **Accelerated AI Development:** With iHuus, building a trustworthy real estate agent takes days, not months. We provide the structured, plug-and-play data so you can skip the GIS pipeline.
-- **Eliminate Hallucinations:** Our data payloads include explicit, human-readable semantic descriptions alongside raw scores, ensuring your LLMs pass accurate context to the end user.
-- **FHA Compliance by Design:** Navigate real estate data safely. Our indices are pre-processed to deliver actionable insights without crossing into protected or biased demographic territories that trigger FHA violations.
+<CardGroup cols={3}>
+  <Card title="Ship in Days, Not Months" icon="rocket">
+    Skip the GIS pipeline. Structured, plug-and-play neighborhood data so you can focus on
+    your product.
+  </Card>
+  <Card title="Zero Hallucinations" icon="check-double">
+    Every response includes raw scores and human-readable descriptions, so your LLMs pass
+    accurate context, not guesses.
+  </Card>
+  <Card title="FHA-Safe by Design" icon="scale-balanced">
+    Pre-processed indices deliver actionable insights without crossing into protected
+    demographic territory.
+  </Card>
+</CardGroup>
 
-## Next Steps
+---
+
+## Authentication
+
+All endpoints require authentication via one of two methods:
+
+| Method           | Header                          | Description                                               |
+| ---------------- | ------------------------------- | --------------------------------------------------------- |
+| **Bearer Token** | `Authorization: Bearer <token>` | Firebase ID token or Apigee-issued OAuth 2.0 access token |
+| **API Key**      | `X-iHuus-API-Key: <key>`        | Apigee API key issued via the iHuus developer portal      |
+
+---
+
+## Quick Start
+
+Make your first API call in seconds. This example finds the closest schools to a location
+in San Jose, CA:
+
+```bash
+curl -G "https://api.ihuus.com/v1/schools/search/coordinates" \
+  -H "X-iHuus-API-Key: YOUR_API_KEY" \
+  -d lat=37.3382 \
+  -d lon=-121.8863 \
+  -d limit=3
+```
+
+---
+
+## Get Started
 
 <CardGroup cols={2}>
   <Card title="MCP Quickstart" icon="robot" href="/guides/mcp">
@@ -57,8 +245,8 @@ Data is only useful if an AI can actually understand it. We format our Neighborh
   <Card
     title="API Reference"
     icon="code"
-    href="/api-reference/v1/schools/search-by-coordinates"
+    href="/api-reference/v1/schools/search/coordinates"
   >
-    Explore our REST endpoints and JSON schemas.
+    Explore all REST endpoints, parameters, and response schemas.
   </Card>
 </CardGroup>
