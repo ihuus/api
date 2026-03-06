@@ -24,7 +24,7 @@ experiences instead of GIS pipelines.
 ## Two Ways to Integrate
 
 <CardGroup cols={2}>
-  <Card title="REST API" icon="bolt" href="/api-reference/v1/schools/search/schools">
+  <Card title="REST API" icon="bolt" href="/api-reference/schools-&-ratings/schools-and-ratings">
     Query our high-performance spatial index directly. Get credible, FHA-compliant,
     hyperlocal data in milliseconds: school ratings, noise levels, flood risk, and more.
   </Card>
@@ -45,21 +45,21 @@ ready for both programmatic use and LLM consumption.
 
 Search for K-12 schools and districts by geographic coordinates. Results include distance,
 level, ratings, and district metadata sourced from federal NCES datasets. Use the
-[Geocode endpoint](/api-reference/v1/tools/geocode_single) to convert addresses to
+[Geocode endpoint](/api-reference/tools/geocode-a-single-address) to convert addresses to
 coordinates first.
 
 <CardGroup cols={2}>
   <Card
     title="Schools and Ratings"
     icon="school"
-    href="/api-reference/v1/schools/search/schools"
+    href="/api-reference/schools-&-ratings/schools-and-ratings"
   >
     Find the closest schools to any lat/lon, with ratings, distance, and district info.
   </Card>
   <Card
     title="School Districts"
     icon="map"
-    href="/api-reference/v1/schools/search/districts"
+    href="/api-reference/schools-&-ratings/school-districts"
   >
     Look up all overlapping school districts (Unified, Elementary, Secondary) at a
     location.
@@ -68,7 +68,7 @@ coordinates first.
 
 <Tip>
   All coordinate-based endpoints work seamlessly with AI agents. Our [Geocode
-  tool](/api-reference/v1/tools/geocode_single) lets LLMs convert addresses to coordinates
+  tool](/api-reference/tools/geocode-a-single-address) lets LLMs convert addresses to coordinates
   automatically, so no extra integration work is needed.
 </Tip>
 
@@ -78,31 +78,31 @@ Captures the qualitative feel of a neighborhood: how private, walkable, visually
 appealing, dog-friendly, or urban/rural it is.
 
 <CardGroup cols={3}>
-  <Card title="Privacy" icon="eye-slash" href="/api-reference/v1/vibe/privacy">
+  <Card title="Privacy" icon="eye-slash" href="/api-reference/vibe/privacy-index-score">
     Seclusion based on density, lot sizes, tree cover, and visibility.
   </Card>
   <Card
     title="Walkability"
     icon="person-walking"
-    href="/api-reference/v1/vibe/walkability"
+    href="/api-reference/vibe/walkability-score"
   >
     Sidewalks, intersection density, and proximity to amenities.
   </Card>
   <Card
     title="Visual Appeal"
     icon="paintbrush"
-    href="/api-reference/v1/vibe/visual-appeal"
+    href="/api-reference/vibe/visual-appeal-score"
   >
     Architectural character, landscaping, and streetscape quality.
   </Card>
   <Card
     title="Dog Friendliness"
     icon="dog"
-    href="/api-reference/v1/vibe/dog-friendliness"
+    href="/api-reference/vibe/dog-friendliness-score"
   >
     Parks, trails, off-leash areas, and pet-friendly businesses.
   </Card>
-  <Card title="Urban-Rural" icon="city" href="/api-reference/v1/vibe/urban-rural">
+  <Card title="Urban-Rural" icon="city" href="/api-reference/vibe/urban-rural-index-score">
     Dense urban core to open countryside, classified from overhead imagery.
   </Card>
 </CardGroup>
@@ -116,17 +116,17 @@ industrial or hazardous sites.
   <Card
     title="Noise Levels"
     icon="volume-high"
-    href="/api-reference/v1/environment/noise-levels"
+    href="/api-reference/environment/noise-levels-score"
   >
     Federal noise modelling for road, railroad, and aviation sources.
   </Card>
-  <Card title="Air Quality" icon="wind" href="/api-reference/v1/environment/air-quality">
+  <Card title="Air Quality" icon="wind" href="/api-reference/environment/air-quality-score">
     AQI consistency derived from OpenAQ monitoring stations.
   </Card>
   <Card
     title="Industrial Proximity"
     icon="industry"
-    href="/api-reference/v1/environment/industrial-proximity"
+    href="/api-reference/environment/industrial-proximity-score"
   >
     EPA hazard data, Superfund sites, and industrial POI density.
   </Card>
@@ -140,21 +140,21 @@ Population-level indicators derived from US Census Bureau data and voting record
   <Card
     title="Insurance Coverage"
     icon="shield-heart"
-    href="/api-reference/v1/demographics/insurance-coverage"
+    href="/api-reference/demographics/health-insurance-coverage"
   >
     Share of residents with health insurance coverage.
   </Card>
   <Card
     title="Ideological Lean"
     icon="scale-balanced"
-    href="/api-reference/v1/demographics/ideological-lean"
+    href="/api-reference/demographics/ideological-lean-score"
   >
     Conservative-to-liberal spectrum from Census and voting data.
   </Card>
   <Card
     title="Population Profile"
     icon="users"
-    href="/api-reference/v1/demographics/population-profile"
+    href="/api-reference/demographics/population-age-profile"
   >
     Age distribution from young-adult-skewing to senior-skewing.
   </Card>
@@ -166,10 +166,10 @@ Natural hazard exposure derived from FEMA and CALFIRE authoritative datasets. Lo
 indicate higher risk.
 
 <CardGroup cols={2}>
-  <Card title="Flood Risk" icon="house-flood-water" href="/api-reference/v1/risk/flood">
+  <Card title="Flood Risk" icon="house-flood-water" href="/api-reference/risk/flood-risk-score">
     FEMA flood zone designations from coastal high-hazard to minimal risk.
   </Card>
-  <Card title="Fire Risk" icon="fire" href="/api-reference/v1/risk/fire">
+  <Card title="Fire Risk" icon="fire" href="/api-reference/risk/fire-risk-score">
     CALFIRE severity zones (California). Severe to no-risk classification.
   </Card>
 </CardGroup>
@@ -182,7 +182,7 @@ Utility endpoints to support agentic workflows and data processing.
   <Card
     title="Geocode Address"
     icon="location-dot"
-    href="/api-reference/v1/tools/geocode_single"
+    href="/api-reference/tools/geocode-a-single-address"
   >
     Convert a free-text address into lat/lon coordinates. Built for single-shot agentic
     use.
@@ -227,7 +227,7 @@ Make your first API call in seconds. This example finds the closest schools to a
 in San Jose, CA:
 
 ```bash
-curl -G "https://api.ihuus.com/v1/schools/search/schools" \
+curl -G "https://api.ihuus.com/v1/schools/search/school_ratings" \
   -H "X-iHuus-API-Key: YOUR_API_KEY" \
   -d lat=37.3382 \
   -d lon=-121.8863 \
@@ -242,7 +242,7 @@ curl -G "https://api.ihuus.com/v1/schools/search/schools" \
   <Card title="MCP Quickstart" icon="robot" href="/guides/mcp">
     Connect iHuus to your AI agents via the Model Context Protocol.
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/v1/schools/search/schools">
+  <Card title="API Reference" icon="code" href="/api-reference/schools-&-ratings/schools-and-ratings">
     Explore all REST endpoints, parameters, and response schemas.
   </Card>
 </CardGroup>
