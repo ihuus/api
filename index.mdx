@@ -24,7 +24,7 @@ experiences instead of GIS pipelines.
 ## Two Ways to Integrate
 
 <CardGroup cols={2}>
-  <Card title="REST API" icon="bolt" href="/api-reference/v1/schools/search/coordinates">
+  <Card title="REST API" icon="bolt" href="/api-reference/v1/schools/search/schools">
     Query our high-performance spatial index directly. Get credible, FHA-compliant,
     hyperlocal data in milliseconds: school ratings, noise levels, flood risk, and more.
   </Card>
@@ -50,16 +50,16 @@ coordinates first.
 
 <CardGroup cols={2}>
   <Card
-    title="Schools by Coordinates"
+    title="Schools and Ratings"
     icon="school"
-    href="/api-reference/v1/schools/search/coordinates"
+    href="/api-reference/v1/schools/search/schools"
   >
     Find the closest schools to any lat/lon, with ratings, distance, and district info.
   </Card>
   <Card
-    title="Districts by Coordinates"
+    title="School Districts"
     icon="map"
-    href="/api-reference/v1/schools/districts/coordinates"
+    href="/api-reference/v1/schools/search/districts"
   >
     Look up all overlapping school districts (Unified, Elementary, Secondary) at a
     location.
@@ -227,7 +227,7 @@ Make your first API call in seconds. This example finds the closest schools to a
 in San Jose, CA:
 
 ```bash
-curl -G "https://api.ihuus.com/v1/schools/search/coordinates" \
+curl -G "https://api.ihuus.com/v1/schools/search/schools" \
   -H "X-iHuus-API-Key: YOUR_API_KEY" \
   -d lat=37.3382 \
   -d lon=-121.8863 \
@@ -242,11 +242,7 @@ curl -G "https://api.ihuus.com/v1/schools/search/coordinates" \
   <Card title="MCP Quickstart" icon="robot" href="/guides/mcp">
     Connect iHuus to your AI agents via the Model Context Protocol.
   </Card>
-  <Card
-    title="API Reference"
-    icon="code"
-    href="/api-reference/v1/schools/search/coordinates"
-  >
+  <Card title="API Reference" icon="code" href="/api-reference/v1/schools/search/schools">
     Explore all REST endpoints, parameters, and response schemas.
   </Card>
 </CardGroup>
